@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Générateur de plans percés</title>
+    <style>
+        canvas { border: 1px solid black; }
+        body { display: flex; flex-direction: column; align-items: center; padding: 20px; }
+        label { margin: 5px; }
+    </style>
+</head>
+<body>
+    <h1>Générateur de plans percés</h1>
+    <h3>Plan 1 (arrière)</h3>
+    <label for="d1">Diamètre des trous (D1) : </label>
+    <input type="number" id="d1" value="20" min="5" max="50">
+    <label for="e1">Espacement (E1) : </label>
+    <input type="number" id="e1" value="60" min="20" max="200">
+    <label for="color1">Couleur Plan 1 (HEX) : </label>
+    <input type="text" id="color1" value="#555555" pattern="#[0-9A-Fa-f]{6}">
+    <h3>Plan 2 (avant)</h3>
+    <label for="d2">Diamètre des trous (D2) : </label>
+    <input type="number" id="d2" value="15" min="5" max="50">
+    <label for="e2">Espacement (E2) : </label>
+    <input type="number" id="e2" value="50" min="20" max="200">
+    <label for="color2">Couleur Plan 2 (HEX) : </label>
+    <input type="text" id="color2" value="#BBBBBB" pattern="#[0-9A-Fa-f]{6}">
+    <h3>Rotation</h3>
+    <label for="angle">Angle entre les plans (degrés) : </label>
+    <input type="number" id="angle" value="0" min="0" max="360">
+    <h3>Fond</h3>
+    <label for="bgColor">Couleur du fond (HEX) : </label>
+    <input type="text" id="bgColor" value="#FFFFFF" pattern="#[0-9A-Fa-f]{6}">
+    <button onclick="drawPlans()">Générer</button>
+    <canvas id="myCanvas" width="800" height="600"></canvas>
+
+    <script>
+        const canvas = document.getElementById('myCanvas');
+        const ctx = canvas.getContext('2d');
+
+        function drawPlans() {
+            const D1 = parseFloat(document.getElementById('d1').value);
+            const E1 = parseFloat(document.getElementById('e1').value);
+            const D2 = parseFloat(document.getElementById('d2').value);
+            const E2 = parseFloat(document.getElementById('e2').value);
+            const angle = parseFloat(document.getElementById('angle').value) * Math.PI / 180;
+            const bgColor = document.getElementById('bgColor').value;
+            const color1 = document.getElementById('color1').value;
+            const color2 = document.getElementById('color2').value;
+
+            // Crée des canvas temporaires pour chaque plan
+            const tempCanvas1 = document.createElement('canvas');
+            tempCanvas1.width = canvas.width;
+            tempCanvas1.height = canvas.height;
+            const tempCtx1 = tempCanvas1.getContext('2d');
+
+            const tempCanvas2 = document.createElement('canvas');
+            tempCanvas2.width = canvas.width;
+            tempCanvas2.height = canvas.height;
+            const tempCtx2 = tempCanvas2.getContext('2d');
+
+            // Fond avec la couleur choisie
+            ctx.fillStyle = bgColor;
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            // Plan 1 avec sa couleur (arrière)
+            tempCtx1.fillStyle = color1;
+            tempCtx1.fillRect(0, 0, canvas.width, canvas.height);
+            punchHoles(tempCtx1, D1, E1, 0);
+
+            // Plan 2 avec sa couleur (avant)
+            tempCtx2.fillStyle = color2;
+            tempCtx2.fillRect(0, 0, canvas.width, canvas.height);
+            punchHoles(tempCtx2, D2, E2, angle);
+
+            // Superpose les plans sur le canvas principal
+            ctx.drawImage(tempCanvas1, 0, 0); // Plan 1 en arrière
+            ctx.drawImage(tempCanvas2, 0, 0); // Plan 2 en avant
+        }
+
+        function punchHoles(context, diameter, spacing, rotationAngle) {
+            const height = spacing * Math.sin(Math.PI / 3); // Hauteur du triangle équilatéral
+            const centerX = canvas.width / 2;
+            const centerY = canvas.height / 2;
+
+            // Mode "destination-out" pour percer les trous
+            context.globalCompositeOperation = 'destination-out';
+            context.fillStyle = 'black'; // Couleur arbitraire pour percer
+
+            for (let i = -15; i <= 15; i++) {
+                for (let j = -15; j <= 15; j++) {
+                    let x = i * spacing + (j % 2) * spacing / 2;
+                    let y = j * height;
+
+                    // Applique la rotation
+                    const rotatedX = centerX + (x * Math.cos(rotationAngle) - y * Math.sin(rotationAngle));
+                    const rotatedY = centerY + (x * Math.sin(rotationAngle) + y * Math.cos(rotationAngle));
+
+                    // Dessine un cercle (trou)
+                    context.beginPath();
+                    context.arc(rotatedX, rotatedY, diameter / 2, 0, 2 * Math.PI);
+                    context.fill();
+                }
+            }
+
+            // Remet le mode à la normale
+            context.globalCompositeOperation = 'source-over';
+        }
+
+        // Dessine une première fois au chargement
+        drawPlans();
+    </script>
+</body>
+</html>
