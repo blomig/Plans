@@ -37,6 +37,7 @@
     <script>
         const canvas = document.getElementById('myCanvas');
         const ctx = canvas.getContext('2d');
+        const OVERFLOW_FACTOR = 2; // Les plans temporaires seront 2x plus grands que le canvas
 
         function drawPlans() {
             const D1 = parseFloat(document.getElementById('d1').value);
@@ -48,47 +49,51 @@
             const color1 = document.getElementById('color1').value;
             const color2 = document.getElementById('color2').value;
 
-            // Crée des canvas temporaires pour chaque plan
+            // Crée des canvas temporaires plus grands
             const tempCanvas1 = document.createElement('canvas');
-            tempCanvas1.width = canvas.width;
-            tempCanvas1.height = canvas.height;
+            tempCanvas1.width = canvas.width * OVERFLOW_FACTOR;
+            tempCanvas1.height = canvas.height * OVERFLOW_FACTOR;
             const tempCtx1 = tempCanvas1.getContext('2d');
 
             const tempCanvas2 = document.createElement('canvas');
-            tempCanvas2.width = canvas.width;
-            tempCanvas2.height = canvas.height;
+            tempCanvas2.width = canvas.width * OVERFLOW_FACTOR;
+            tempCanvas2.height = canvas.height * OVERFLOW_FACTOR;
             const tempCtx2 = tempCanvas2.getContext('2d');
 
-            // Fond avec la couleur choisie
+            // Fond sur le canvas principal
             ctx.fillStyle = bgColor;
             ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-            // Plan 1 avec sa couleur (arrière)
+            // Plan 1 sur le canvas temporaire 1
             tempCtx1.fillStyle = color1;
-            tempCtx1.fillRect(0, 0, canvas.width, canvas.height);
-            punchHoles(tempCtx1, D1, E1, 0);
+            tempCtx1.fillRect(0, 0, tempCanvas1.width, tempCanvas1.height);
+            punchHoles(tempCtx1, D1, E1, 0, tempCanvas1.width, tempCanvas1.height);
 
-            // Plan 2 avec sa couleur (avant)
+            // Plan 2 sur le canvas temporaire 2
             tempCtx2.fillStyle = color2;
-            tempCtx2.fillRect(0, 0, canvas.width, canvas.height);
-            punchHoles(tempCtx2, D2, E2, angle);
+            tempCtx2.fillRect(0, 0, tempCanvas2.width, tempCanvas2.height);
+            punchHoles(tempCtx2, D2, E2, angle, tempCanvas2.width, tempCanvas2.height);
 
-            // Superpose les plans sur le canvas principal
-            ctx.drawImage(tempCanvas1, 0, 0); // Plan 1 en arrière
-            ctx.drawImage(tempCanvas2, 0, 0); // Plan 2 en avant
+            // Superpose les plans en prenant une portion centrée
+            const offsetX = (tempCanvas1.width - canvas.width) / 2;
+            const offsetY = (tempCanvas1.height - canvas.height) / 2;
+            ctx.drawImage(tempCanvas1, offsetX, offsetY, canvas.width, canvas.height, 0, 0, canvas.width, canvas.height);
+            ctx.drawImage(tempCanvas2, offsetX, offsetY, canvas.width, canvas.height, 0, 0, canvas.width, canvas.height);
         }
 
-        function punchHoles(context, diameter, spacing, rotationAngle) {
+        function punchHoles(context, diameter, spacing, rotationAngle, canvasWidth, canvasHeight) {
             const height = spacing * Math.sin(Math.PI / 3); // Hauteur du triangle équilatéral
-            const centerX = canvas.width / 2;
-            const centerY = canvas.height / 2;
+            const centerX = canvasWidth / 2;
+            const centerY = canvasHeight / 2;
 
             // Mode "destination-out" pour percer les trous
             context.globalCompositeOperation = 'destination-out';
-            context.fillStyle = 'black'; // Couleur arbitraire pour percer
+            context.fillStyle = 'black';
 
-            for (let i = -15; i <= 15; i++) {
-                for (let j = -15; j <= 15; j++) {
+            // Étend les boucles pour couvrir une zone plus grande
+            const maxExtent = Math.max(canvasWidth, canvasHeight) / spacing + 5;
+            for (let i = -maxExtent; i <= maxExtent; i++) {
+                for (let j = -maxExtent; j <= maxExtent; j++) {
                     let x = i * spacing + (j % 2) * spacing / 2;
                     let y = j * height;
 
