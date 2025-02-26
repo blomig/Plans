@@ -13,13 +13,31 @@
             padding: 5px; 
             border: 1px solid #ccc; 
             background-color: #f9f9f9;
-            cursor: pointer; /* Indique que le texte est cliquable pour copier */
+            cursor: pointer; 
         }
         #paramString:hover { background-color: #e9e9e9; }
     </style>
 </head>
 <body>
     <h1>Générateur de plans percés</h1>
+    <h3>Plages de tirage aléatoire</h3>
+    <label for="minD1">Min D1 : </label>
+    <input type="number" id="minD1" value="5" min="1" max="49">
+    <label for="maxD1">Max D1 : </label>
+    <input type="number" id="maxD1" value="50" min="6" max="50"><br>
+    <label for="minE1">Min E1 : </label>
+    <input type="number" id="minE1" value="20" min="1" max="199">
+    <label for="maxE1">Max E1 : </label>
+    <input type="number" id="maxE1" value="200" min="21" max="200"><br>
+    <label for="minD2">Min D2 : </label>
+    <input type="number" id="minD2" value="5" min="1" max="49">
+    <label for="maxD2">Max D2 : </label>
+    <input type="number" id="maxD2" value="50" min="6" max="50"><br>
+    <label for="minE2">Min E2 : </label>
+    <input type="number" id="minE2" value="20" min="1" max="199">
+    <label for="maxE2">Max E2 : </label>
+    <input type="number" id="maxE2" value="200" min="21" max="200"><br>
+
     <h3>Plan 1 (arrière)</h3>
     <label for="d1">Diamètre des trous (D1) : </label>
     <input type="number" id="d1" value="20" min="5" max="50">
@@ -111,21 +129,36 @@
         }
 
         function randomize() {
-            const D1 = Math.floor(Math.random() * (50 - 5 + 1)) + 5;
-            const E1 = Math.floor(Math.random() * (200 - (D1 + 1) + 1)) + (D1 + 1);
+            // Récupère les bornes des champs
+            const minD1 = parseFloat(document.getElementById('minD1').value);
+            const maxD1 = parseFloat(document.getElementById('maxD1').value);
+            const minE1 = parseFloat(document.getElementById('minE1').value);
+            const maxE1 = parseFloat(document.getElementById('maxE1').value);
+            const minD2 = parseFloat(document.getElementById('minD2').value);
+            const maxD2 = parseFloat(document.getElementById('maxD2').value);
+            const minE2 = parseFloat(document.getElementById('minE2').value);
+            const maxE2 = parseFloat(document.getElementById('maxE2').value);
+
+            // Génère D1 et E1 avec E1 > D1
+            const D1 = Math.floor(Math.random() * (maxD1 - minD1 + 1)) + minD1;
+            const E1 = Math.floor(Math.random() * (maxE1 - (D1 + 1) + 1)) + (D1 + 1);
             document.getElementById('d1').value = D1;
             document.getElementById('e1').value = E1;
 
-            const D2 = Math.floor(Math.random() * (50 - 5 + 1)) + 5;
-            const E2 = Math.floor(Math.random() * (200 - (D2 + 1) + 1)) + (D2 + 1);
+            // Génère D2 et E2 avec E2 > D2
+            const D2 = Math.floor(Math.random() * (maxD2 - minD2 + 1)) + minD2;
+            const E2 = Math.floor(Math.random() * (maxE2 - (D2 + 1) + 1)) + (D2 + 1);
             document.getElementById('d2').value = D2;
             document.getElementById('e2').value = E2;
 
+            // Génère un angle aléatoire (0 à 360)
             const angle = Math.floor(Math.random() * 361);
             document.getElementById('angle').value = angle;
 
+            // Garde le fond blanc
             document.getElementById('bgColor').value = '#FFFFFF';
 
+            // Génère des couleurs aléatoires pour Plan 1 et Plan 2
             const color1 = '#' + Math.floor(Math.random() * 16777216).toString(16).padStart(6, '0');
             const color2 = '#' + Math.floor(Math.random() * 16777216).toString(16).padStart(6, '0');
             document.getElementById('color1').value = color1;
