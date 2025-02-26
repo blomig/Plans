@@ -60,13 +60,13 @@
     <input type="text" id="bgColor" value="#FFFFFF" pattern="#[0-9A-Fa-f]{6}">
     <button onclick="drawPlans()">Générer</button>
     <button onclick="randomize()">Aléatoire</button>
-    <canvas id="myCanvas" width="800" height="600"></canvas>
+    <canvas id="myCanvas" width="1000" height="1000"></canvas>
     <p id="paramString" onclick="copyToClipboard()">Cliquez pour copier les paramètres : <span id="paramValues"></span></p>
 
     <script>
         const canvas = document.getElementById('myCanvas');
         const ctx = canvas.getContext('2d');
-        const OVERFLOW_FACTOR = 2;
+        const OVERFLOW_FACTOR = 2; // Les plans temporaires seront 2x plus grands que le canvas
 
         function drawPlans() {
             const D1 = parseFloat(document.getElementById('d1').value);
@@ -78,53 +78,66 @@
             const color1 = document.getElementById('color1').value;
             const color2 = document.getElementById('color2').value;
 
+            // Crée des canvas temporaires plus grands (1000 * OVERFLOW_FACTOR)
             const tempCanvas1 = document.createElement('canvas');
-            tempCanvas1.width = canvas.width * OVERFLOW_FACTOR;
-            tempCanvas1.height = canvas.height * OVERFLOW_FACTOR;
+            tempCanvas1.width = 1000 * OVERFLOW_FACTOR;
+            tempCanvas1.height = 1000 * OVERFLOW_FACTOR;
             const tempCtx1 = tempCanvas1.getContext('2d');
 
             const tempCanvas2 = document.createElement('canvas');
-            tempCanvas2.width = canvas.width * OVERFLOW_FACTOR;
-            tempCanvas2.height = canvas.height * OVERFLOW_FACTOR;
+            tempCanvas2.width = 1000 * OVERFLOW_FACTOR;
+            tempCanvas2.height = 1000 * OVERFLOW_FACTOR;
             const tempCtx2 = tempCanvas2.getContext('2d');
 
+            // Fond sur le canvas principal
             ctx.fillStyle = bgColor;
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.fillRect(0, 0, 1000, 1000);
 
+            // Plan 1 sur le canvas temporaire 1
             tempCtx1.fillStyle = color1;
             tempCtx1.fillRect(0, 0, tempCanvas1.width, tempCanvas1.height);
             punchHoles(tempCtx1, D1, E1, 0, tempCanvas1.width, tempCanvas1.height);
 
+            // Plan 2 sur le canvas temporaire 2
             tempCtx2.fillStyle = color2;
             tempCtx2.fillRect(0, 0, tempCanvas2.width, tempCanvas2.height);
             punchHoles(tempCtx2, D2, E2, angle, tempCanvas2.width, tempCanvas2.height);
 
-            const offsetX = (tempCanvas1.width - canvas.width) / 2;
-            const offsetY = (tempCanvas1.height - canvas.height) / 2;
-            ctx.drawImage(tempCanvas1, offsetX, offsetY, canvas.width, canvas.height, 0, 0, canvas.width, canvas.height);
-            ctx.drawImage(tempCanvas2, offsetX, offsetY, canvas.width, canvas.height, 0, 0, canvas.width, canvas.height);
+            // Superpose les plans en prenant une portion centrée de 1000x1000
+            const offsetX = (tempCanvas1.width - 1000) / 2;
+            const offsetY = (tempCanvas1.height - 1000) / 2;
+            ctx.drawImage(tempCanvas1, offsetX, offsetY, 1000, 1000, 0, 0, 1000, 1000);
+            ctx.drawImage(tempCanvas2, offsetX, offsetY, 1000, 1000, 0, 0, 1000, 1000);
         }
 
         function punchHoles(context, diameter, spacing, rotationAngle, canvasWidth, canvasHeight) {
-            const height = spacing * Math.sin(Math.PI / 3);
+            const height = spacing * Math.sin(Math.PI / 3); // Hauteur du triangle équilatéral
             const centerX = canvasWidth / 2;
             const centerY = canvasHeight / 2;
 
+            // Mode "destination-out" pour percer les trous
             context.globalCompositeOperation = 'destination-out';
-            context.fillStyle = 'black';
+            context.fillStyle = 'black'; // Couleur arbitraire pour percer
 
-            const maxExtent = Math.max(canvasWidth, canvasHeight) / spacing + 5;
+            // Étend les boucles pour couvrir une zone plus grande, adaptée à 1000x1000
+            const maxExtent = Math.max(canvasWidth, canvasHeight) / spacing + 10; // Augmente la marge pour couvrir un carré 1000x1000
             for (let i = -maxExtent; i <= maxExtent; i++) {
                 for (let j = -maxExtent; j <= maxExtent; j++) {
                     let x = i * spacing + (j % 2) * spacing / 2;
                     let y = j * height;
+
+                    // Applique la rotation
                     const rotatedX = centerX + (x * Math.cos(rotationAngle) - y * Math.sin(rotationAngle));
                     const rotatedY = centerY + (x * Math.sin(rotationAngle) + y * Math.cos(rotationAngle));
+
+                    // Dessine un cercle (trou)
                     context.beginPath();
                     context.arc(rotatedX, rotatedY, diameter / 2, 0, 2 * Math.PI);
                     context.fill();
                 }
             }
+
+            // Remet le mode à la normale
             context.globalCompositeOperation = 'source-over';
         }
 
