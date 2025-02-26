@@ -7,6 +7,7 @@
         canvas { border: 1px solid black; }
         body { display: flex; flex-direction: column; align-items: center; padding: 20px; }
         label { margin: 5px; }
+        button { margin: 5px; }
     </style>
 </head>
 <body>
@@ -32,12 +33,13 @@
     <label for="bgColor">Couleur du fond (HEX) : </label>
     <input type="text" id="bgColor" value="#FFFFFF" pattern="#[0-9A-Fa-f]{6}">
     <button onclick="drawPlans()">Générer</button>
+    <button onclick="randomize()">Aléatoire</button>
     <canvas id="myCanvas" width="800" height="600"></canvas>
 
     <script>
         const canvas = document.getElementById('myCanvas');
         const ctx = canvas.getContext('2d');
-        const OVERFLOW_FACTOR = 2; // Les plans temporaires seront 2x plus grands que le canvas
+        const OVERFLOW_FACTOR = 2;
 
         function drawPlans() {
             const D1 = parseFloat(document.getElementById('d1').value);
@@ -49,7 +51,6 @@
             const color1 = document.getElementById('color1').value;
             const color2 = document.getElementById('color2').value;
 
-            // Crée des canvas temporaires plus grands
             const tempCanvas1 = document.createElement('canvas');
             tempCanvas1.width = canvas.width * OVERFLOW_FACTOR;
             tempCanvas1.height = canvas.height * OVERFLOW_FACTOR;
@@ -60,21 +61,17 @@
             tempCanvas2.height = canvas.height * OVERFLOW_FACTOR;
             const tempCtx2 = tempCanvas2.getContext('2d');
 
-            // Fond sur le canvas principal
             ctx.fillStyle = bgColor;
             ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-            // Plan 1 sur le canvas temporaire 1
             tempCtx1.fillStyle = color1;
             tempCtx1.fillRect(0, 0, tempCanvas1.width, tempCanvas1.height);
             punchHoles(tempCtx1, D1, E1, 0, tempCanvas1.width, tempCanvas1.height);
 
-            // Plan 2 sur le canvas temporaire 2
             tempCtx2.fillStyle = color2;
             tempCtx2.fillRect(0, 0, tempCanvas2.width, tempCanvas2.height);
             punchHoles(tempCtx2, D2, E2, angle, tempCanvas2.width, tempCanvas2.height);
 
-            // Superpose les plans en prenant une portion centrée
             const offsetX = (tempCanvas1.width - canvas.width) / 2;
             const offsetY = (tempCanvas1.height - canvas.height) / 2;
             ctx.drawImage(tempCanvas1, offsetX, offsetY, canvas.width, canvas.height, 0, 0, canvas.width, canvas.height);
@@ -82,34 +79,56 @@
         }
 
         function punchHoles(context, diameter, spacing, rotationAngle, canvasWidth, canvasHeight) {
-            const height = spacing * Math.sin(Math.PI / 3); // Hauteur du triangle équilatéral
+            const height = spacing * Math.sin(Math.PI / 3);
             const centerX = canvasWidth / 2;
             const centerY = canvasHeight / 2;
 
-            // Mode "destination-out" pour percer les trous
             context.globalCompositeOperation = 'destination-out';
             context.fillStyle = 'black';
 
-            // Étend les boucles pour couvrir une zone plus grande
             const maxExtent = Math.max(canvasWidth, canvasHeight) / spacing + 5;
             for (let i = -maxExtent; i <= maxExtent; i++) {
                 for (let j = -maxExtent; j <= maxExtent; j++) {
                     let x = i * spacing + (j % 2) * spacing / 2;
                     let y = j * height;
-
-                    // Applique la rotation
                     const rotatedX = centerX + (x * Math.cos(rotationAngle) - y * Math.sin(rotationAngle));
                     const rotatedY = centerY + (x * Math.sin(rotationAngle) + y * Math.cos(rotationAngle));
-
-                    // Dessine un cercle (trou)
                     context.beginPath();
                     context.arc(rotatedX, rotatedY, diameter / 2, 0, 2 * Math.PI);
                     context.fill();
                 }
             }
-
-            // Remet le mode à la normale
             context.globalCompositeOperation = 'source-over';
+        }
+
+        function randomize() {
+            // Génère D1 et E1 avec E1 > D1
+            const D1 = Math.floor(Math.random() * (50 - 5 + 1)) + 5; // 5 à 50
+            const E1 = Math.floor(Math.random() * (200 - (D1 + 1) + 1)) + (D1 + 1); // D1+1 à 200
+            document.getElementById('d1').value = D1;
+            document.getElementById('e1').value = E1;
+
+            // Génère D2 et E2 avec E2 > D2
+            const D2 = Math.floor(Math.random() * (50 - 5 + 1)) + 5; // 5 à 50
+            const E2 = Math.floor(Math.random() * (200 - (D2 + 1) + 1)) + (D2 + 1); // D2+1 à 200
+            document.getElementById('d2').value = D2;
+            document.getElementById('e2').value = E2;
+
+            // Génère un angle aléatoire (0 à 360)
+            const angle = Math.floor(Math.random() * 361); // 0 à 360
+            document.getElementById('angle').value = angle;
+
+            // Garde le fond blanc
+            document.getElementById('bgColor').value = '#FFFFFF';
+
+            // Génère des couleurs aléatoires pour Plan 1 et Plan 2
+            const color1 = '#' + Math.floor(Math.random() * 16777216).toString(16).padStart(6, '0');
+            const color2 = '#' + Math.floor(Math.random() * 16777216).toString(16).padStart(6, '0');
+            document.getElementById('color1').value = color1;
+            document.getElementById('color2').value = color2;
+
+            // Dessine avec les nouvelles valeurs
+            drawPlans();
         }
 
         // Dessine une première fois au chargement
