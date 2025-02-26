@@ -8,6 +8,14 @@
         body { display: flex; flex-direction: column; align-items: center; padding: 20px; }
         label { margin: 5px; }
         button { margin: 5px; }
+        #paramString { 
+            margin-top: 10px; 
+            padding: 5px; 
+            border: 1px solid #ccc; 
+            background-color: #f9f9f9;
+            cursor: pointer; /* Indique que le texte est cliquable pour copier */
+        }
+        #paramString:hover { background-color: #e9e9e9; }
     </style>
 </head>
 <body>
@@ -35,6 +43,7 @@
     <button onclick="drawPlans()">Générer</button>
     <button onclick="randomize()">Aléatoire</button>
     <canvas id="myCanvas" width="800" height="600"></canvas>
+    <p id="paramString" onclick="copyToClipboard()">Cliquez pour copier les paramètres : <span id="paramValues"></span></p>
 
     <script>
         const canvas = document.getElementById('myCanvas');
@@ -102,33 +111,45 @@
         }
 
         function randomize() {
-            // Génère D1 et E1 avec E1 > D1
-            const D1 = Math.floor(Math.random() * (50 - 5 + 1)) + 5; // 5 à 50
-            const E1 = Math.floor(Math.random() * (200 - (D1 + 1) + 1)) + (D1 + 1); // D1+1 à 200
+            const D1 = Math.floor(Math.random() * (50 - 5 + 1)) + 5;
+            const E1 = Math.floor(Math.random() * (200 - (D1 + 1) + 1)) + (D1 + 1);
             document.getElementById('d1').value = D1;
             document.getElementById('e1').value = E1;
 
-            // Génère D2 et E2 avec E2 > D2
-            const D2 = Math.floor(Math.random() * (50 - 5 + 1)) + 5; // 5 à 50
-            const E2 = Math.floor(Math.random() * (200 - (D2 + 1) + 1)) + (D2 + 1); // D2+1 à 200
+            const D2 = Math.floor(Math.random() * (50 - 5 + 1)) + 5;
+            const E2 = Math.floor(Math.random() * (200 - (D2 + 1) + 1)) + (D2 + 1);
             document.getElementById('d2').value = D2;
             document.getElementById('e2').value = E2;
 
-            // Génère un angle aléatoire (0 à 360)
-            const angle = Math.floor(Math.random() * 361); // 0 à 360
+            const angle = Math.floor(Math.random() * 361);
             document.getElementById('angle').value = angle;
 
-            // Garde le fond blanc
             document.getElementById('bgColor').value = '#FFFFFF';
 
-            // Génère des couleurs aléatoires pour Plan 1 et Plan 2
             const color1 = '#' + Math.floor(Math.random() * 16777216).toString(16).padStart(6, '0');
             const color2 = '#' + Math.floor(Math.random() * 16777216).toString(16).padStart(6, '0');
             document.getElementById('color1').value = color1;
             document.getElementById('color2').value = color2;
 
+            // Génère et affiche la chaîne de paramètres
+            updateParamString(D1, E1, color1, D2, E2, color2, angle);
+
             // Dessine avec les nouvelles valeurs
             drawPlans();
+        }
+
+        function updateParamString(D1, E1, color1, D2, E2, color2, angle) {
+            const paramString = `${D1}-${E1}-${color1}-${D2}-${E2}-${color2}-${angle}`;
+            document.getElementById('paramValues').textContent = paramString;
+        }
+
+        function copyToClipboard() {
+            const paramString = document.getElementById('paramValues').textContent;
+            navigator.clipboard.writeText(paramString).then(() => {
+                alert('Paramètres copiés dans le presse-papiers !');
+            }).catch(err => {
+                console.error('Erreur lors de la copie : ', err);
+            });
         }
 
         // Dessine une première fois au chargement
