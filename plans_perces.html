@@ -22,39 +22,55 @@
     <h1>Générateur de plans percés</h1>
     <h3>Plages de tirage aléatoire</h3>
     <label for="minD1">Min D1 : </label>
-    <input type="number" id="minD1" value="5" min="1" max="49">
+    <input type="number" id="minD1" value="5" min="1" max="199">
     <label for="maxD1">Max D1 : </label>
-    <input type="number" id="maxD1" value="200" min="6" max="50"><br>
+    <input type="number" id="maxD1" value="200" min="6" max="200"><br>
     <label for="minE1">Min E1 : </label>
-    <input type="number" id="minE1" value="10" min="1" max="199">
+    <input type="number" id="minE1" value="10" min="1" max="399">
     <label for="maxE1">Max E1 : </label>
-    <input type="number" id="maxE1" value="400" min="21" max="200"><br>
+    <input type="number" id="maxE1" value="400" min="11" max="400"><br>
     <label for="minD2">Min D2 : </label>
-    <input type="number" id="minD2" value="5" min="1" max="49">
+    <input type="number" id="minD2" value="5" min="1" max="199">
     <label for="maxD2">Max D2 : </label>
-    <input type="number" id="maxD2" value="200" min="6" max="50"><br>
+    <input type="number" id="maxD2" value="200" min="6" max="200"><br>
     <label for="minE2">Min E2 : </label>
-    <input type="number" id="minE2" value="10" min="1" max="199">
+    <input type="number" id="minE2" value="10" min="1" max="399">
     <label for="maxE2">Max E2 : </label>
-    <input type="number" id="maxE2" value="400" min="21" max="200"><br>
+    <input type="number" id="maxE2" value="400" min="11" max="400"><br>
+    <label for="minD3">Min D3 : </label>
+    <input type="number" id="minD3" value="5" min="1" max="199">
+    <label for="maxD3">Max D3 : </label>
+    <input type="number" id="maxD3" value="200" min="6" max="200"><br>
+    <label for="minE3">Min E3 : </label>
+    <input type="number" id="minE3" value="10" min="1" max="399">
+    <label for="maxE3">Max E3 : </label>
+    <input type="number" id="maxE3" value="400" min="11" max="400"><br>
 
     <h3>Plan 1 (arrière)</h3>
     <label for="d1">Diamètre des trous (D1) : </label>
-    <input type="number" id="d1" value="20" min="5" max="50">
+    <input type="number" id="d1" value="20" min="5" max="200">
     <label for="e1">Espacement (E1) : </label>
-    <input type="number" id="e1" value="60" min="20" max="200">
+    <input type="number" id="e1" value="60" min="10" max="400">
     <label for="color1">Couleur Plan 1 (HEX) : </label>
     <input type="text" id="color1" value="#555555" pattern="#[0-9A-Fa-f]{6}">
-    <h3>Plan 2 (avant)</h3>
+    <h3>Plan 2 (milieu)</h3>
     <label for="d2">Diamètre des trous (D2) : </label>
-    <input type="number" id="d2" value="15" min="5" max="50">
+    <input type="number" id="d2" value="15" min="5" max="200">
     <label for="e2">Espacement (E2) : </label>
-    <input type="number" id="e2" value="50" min="20" max="200">
+    <input type="number" id="e2" value="50" min="10" max="400">
     <label for="color2">Couleur Plan 2 (HEX) : </label>
     <input type="text" id="color2" value="#BBBBBB" pattern="#[0-9A-Fa-f]{6}">
-    <h3>Rotation</h3>
-    <label for="angle">Angle entre les plans (degrés) : </label>
-    <input type="number" id="angle" value="0" min="0" max="360">
+    <label for="angle2">Angle Plan 2 (degrés) : </label>
+    <input type="number" id="angle2" value="0" min="0" max="360">
+    <h3>Plan 3 (avant)</h3>
+    <label for="d3">Diamètre des trous (D3) : </label>
+    <input type="number" id="d3" value="10" min="5" max="200">
+    <label for="e3">Espacement (E3) : </label>
+    <input type="number" id="e3" value="40" min="10" max="400">
+    <label for="color3">Couleur Plan 3 (HEX) : </label>
+    <input type="text" id="color3" value="#888888" pattern="#[0-9A-Fa-f]{6}">
+    <label for="angle3">Angle Plan 3 (degrés) : </label>
+    <input type="number" id="angle3" value="0" min="0" max="360">
     <h3>Fond</h3>
     <label for="bgColor">Couleur du fond (HEX) : </label>
     <input type="text" id="bgColor" value="#FFFFFF" pattern="#[0-9A-Fa-f]{6}">
@@ -66,19 +82,22 @@
     <script>
         const canvas = document.getElementById('myCanvas');
         const ctx = canvas.getContext('2d');
-        const OVERFLOW_FACTOR = 2; // Les plans temporaires seront 2x plus grands que le canvas
+        const OVERFLOW_FACTOR = 2;
 
         function drawPlans() {
             const D1 = parseFloat(document.getElementById('d1').value);
             const E1 = parseFloat(document.getElementById('e1').value);
             const D2 = parseFloat(document.getElementById('d2').value);
             const E2 = parseFloat(document.getElementById('e2').value);
-            const angle = parseFloat(document.getElementById('angle').value) * Math.PI / 180;
+            const D3 = parseFloat(document.getElementById('d3').value);
+            const E3 = parseFloat(document.getElementById('e3').value);
+            const angle2 = parseFloat(document.getElementById('angle2').value) * Math.PI / 180;
+            const angle3 = parseFloat(document.getElementById('angle3').value) * Math.PI / 180;
             const bgColor = document.getElementById('bgColor').value;
             const color1 = document.getElementById('color1').value;
             const color2 = document.getElementById('color2').value;
+            const color3 = document.getElementById('color3').value;
 
-            // Crée des canvas temporaires plus grands (1000 * OVERFLOW_FACTOR)
             const tempCanvas1 = document.createElement('canvas');
             tempCanvas1.width = 1000 * OVERFLOW_FACTOR;
             tempCanvas1.height = 1000 * OVERFLOW_FACTOR;
@@ -89,60 +108,57 @@
             tempCanvas2.height = 1000 * OVERFLOW_FACTOR;
             const tempCtx2 = tempCanvas2.getContext('2d');
 
-            // Fond sur le canvas principal
+            const tempCanvas3 = document.createElement('canvas');
+            tempCanvas3.width = 1000 * OVERFLOW_FACTOR;
+            tempCanvas3.height = 1000 * OVERFLOW_FACTOR;
+            const tempCtx3 = tempCanvas3.getContext('2d');
+
             ctx.fillStyle = bgColor;
             ctx.fillRect(0, 0, 1000, 1000);
 
-            // Plan 1 sur le canvas temporaire 1
             tempCtx1.fillStyle = color1;
             tempCtx1.fillRect(0, 0, tempCanvas1.width, tempCanvas1.height);
             punchHoles(tempCtx1, D1, E1, 0, tempCanvas1.width, tempCanvas1.height);
 
-            // Plan 2 sur le canvas temporaire 2
             tempCtx2.fillStyle = color2;
             tempCtx2.fillRect(0, 0, tempCanvas2.width, tempCanvas2.height);
-            punchHoles(tempCtx2, D2, E2, angle, tempCanvas2.width, tempCanvas2.height);
+            punchHoles(tempCtx2, D2, E2, angle2, tempCanvas2.width, tempCanvas2.height);
 
-            // Superpose les plans en prenant une portion centrée de 1000x1000
+            tempCtx3.fillStyle = color3;
+            tempCtx3.fillRect(0, 0, tempCanvas3.width, tempCanvas3.height);
+            punchHoles(tempCtx3, D3, E3, angle3, tempCanvas3.width, tempCanvas3.height);
+
             const offsetX = (tempCanvas1.width - 1000) / 2;
             const offsetY = (tempCanvas1.height - 1000) / 2;
             ctx.drawImage(tempCanvas1, offsetX, offsetY, 1000, 1000, 0, 0, 1000, 1000);
             ctx.drawImage(tempCanvas2, offsetX, offsetY, 1000, 1000, 0, 0, 1000, 1000);
+            ctx.drawImage(tempCanvas3, offsetX, offsetY, 1000, 1000, 0, 0, 1000, 1000);
         }
 
         function punchHoles(context, diameter, spacing, rotationAngle, canvasWidth, canvasHeight) {
-            const height = spacing * Math.sin(Math.PI / 3); // Hauteur du triangle équilatéral
+            const height = spacing * Math.sin(Math.PI / 3);
             const centerX = canvasWidth / 2;
             const centerY = canvasHeight / 2;
 
-            // Mode "destination-out" pour percer les trous
             context.globalCompositeOperation = 'destination-out';
-            context.fillStyle = 'black'; // Couleur arbitraire pour percer
+            context.fillStyle = 'black';
 
-            // Étend les boucles pour couvrir une zone plus grande, adaptée à 1000x1000
-            const maxExtent = Math.max(canvasWidth, canvasHeight) / spacing + 10; // Augmente la marge pour couvrir un carré 1000x1000
+            const maxExtent = Math.max(canvasWidth, canvasHeight) / spacing + 10;
             for (let i = -maxExtent; i <= maxExtent; i++) {
                 for (let j = -maxExtent; j <= maxExtent; j++) {
                     let x = i * spacing + (j % 2) * spacing / 2;
                     let y = j * height;
-
-                    // Applique la rotation
                     const rotatedX = centerX + (x * Math.cos(rotationAngle) - y * Math.sin(rotationAngle));
                     const rotatedY = centerY + (x * Math.sin(rotationAngle) + y * Math.cos(rotationAngle));
-
-                    // Dessine un cercle (trou)
                     context.beginPath();
                     context.arc(rotatedX, rotatedY, diameter / 2, 0, 2 * Math.PI);
                     context.fill();
                 }
             }
-
-            // Remet le mode à la normale
             context.globalCompositeOperation = 'source-over';
         }
 
         function randomize() {
-            // Récupère les bornes des champs
             const minD1 = parseFloat(document.getElementById('minD1').value);
             const maxD1 = parseFloat(document.getElementById('maxD1').value);
             const minE1 = parseFloat(document.getElementById('minE1').value);
@@ -151,6 +167,10 @@
             const maxD2 = parseFloat(document.getElementById('maxD2').value);
             const minE2 = parseFloat(document.getElementById('minE2').value);
             const maxE2 = parseFloat(document.getElementById('maxE2').value);
+            const minD3 = parseFloat(document.getElementById('minD3').value);
+            const maxD3 = parseFloat(document.getElementById('maxD3').value);
+            const minE3 = parseFloat(document.getElementById('minE3').value);
+            const maxE3 = parseFloat(document.getElementById('maxE3').value);
 
             // Génère D1 et E1 avec E1 > D1
             const D1 = Math.floor(Math.random() * (maxD1 - minD1 + 1)) + minD1;
@@ -164,28 +184,38 @@
             document.getElementById('d2').value = D2;
             document.getElementById('e2').value = E2;
 
-            // Génère un angle aléatoire (0 à 360)
-            const angle = Math.floor(Math.random() * 361);
-            document.getElementById('angle').value = angle;
+            // Génère D3 et E3 avec E3 > D3
+            const D3 = Math.floor(Math.random() * (maxD3 - minD3 + 1)) + minD3;
+            const E3 = Math.floor(Math.random() * (maxE3 - (D3 + 1) + 1)) + (D3 + 1);
+            document.getElementById('d3').value = D3;
+            document.getElementById('e3').value = E3;
+
+            // Génère des angles aléatoires pour Plan 2 et Plan 3
+            const angle2 = Math.floor(Math.random() * 361);
+            document.getElementById('angle2').value = angle2;
+            const angle3 = Math.floor(Math.random() * 361);
+            document.getElementById('angle3').value = angle3;
 
             // Garde le fond blanc
             document.getElementById('bgColor').value = '#FFFFFF';
 
-            // Génère des couleurs aléatoires pour Plan 1 et Plan 2
+            // Génère des couleurs aléatoires pour les trois plans
             const color1 = '#' + Math.floor(Math.random() * 16777216).toString(16).padStart(6, '0');
             const color2 = '#' + Math.floor(Math.random() * 16777216).toString(16).padStart(6, '0');
+            const color3 = '#' + Math.floor(Math.random() * 16777216).toString(16).padStart(6, '0');
             document.getElementById('color1').value = color1;
             document.getElementById('color2').value = color2;
+            document.getElementById('color3').value = color3;
 
             // Génère et affiche la chaîne de paramètres
-            updateParamString(D1, E1, color1, D2, E2, color2, angle);
+            updateParamString(D1, E1, color1, D2, E2, color2, angle2, D3, E3, color3, angle3);
 
             // Dessine avec les nouvelles valeurs
             drawPlans();
         }
 
-        function updateParamString(D1, E1, color1, D2, E2, color2, angle) {
-            const paramString = `${D1}-${E1}-${color1}-${D2}-${E2}-${color2}-${angle}`;
+        function updateParamString(D1, E1, color1, D2, E2, color2, angle2, D3, E3, color3, angle3) {
+            const paramString = `${D1}-${E1}-${color1}-${D2}-${E2}-${color2}-${angle2}-${D3}-${E3}-${color3}-${angle3}`;
             document.getElementById('paramValues').textContent = paramString;
         }
 
