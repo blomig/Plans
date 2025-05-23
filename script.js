@@ -159,10 +159,15 @@ function copyToClipboard() {
 
 function downloadCanvas() {
     const paramString = document.getElementById('paramValues').textContent;
-    // Remplace les '#' par 'hex' pour éviter les caractères invalides dans le nom du fichier
+    console.log('Chaîne de paramètres récupérée :', paramString); // Vérifie la chaîne
+    if (!paramString) {
+        console.error('Erreur : paramString est vide ou #paramValues non trouvé.');
+        return;
+    }
     const cleanParamString = paramString.replace(/#/g, 'hex');
-    // Crée le nom du fichier avec l'extension .png
+    console.log('Chaîne nettoyée :', cleanParamString); // Vérifie la chaîne nettoyée
     const fileName = `${cleanParamString}.png`;
+    console.log('Nom du fichier généré :', fileName); // Vérifie le nom du fichier
 
     const link = document.createElement('a');
     link.download = fileName;
