@@ -158,8 +158,14 @@ function copyToClipboard() {
 }
 
 function downloadCanvas() {
+    const paramString = document.getElementById('paramValues').textContent;
+    // Remplace les '#' par 'hex' pour éviter les caractères invalides dans le nom du fichier
+    const cleanParamString = paramString.replace(/#/g, 'hex');
+    // Crée le nom du fichier avec l'extension .png
+    const fileName = `${cleanParamString}.png`;
+
     const link = document.createElement('a');
-    link.download = 'plans_perces.png';
+    link.download = fileName;
     link.href = canvas.toDataURL('image/png');
     link.click();
 }
