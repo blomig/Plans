@@ -8,7 +8,7 @@ function drawPlans() {
     const E1 = parseFloat(document.getElementById('e1').value);
     const D2 = parseFloat(document.getElementById('d2').value);
     const E2 = parseFloat(document.getElementById('e2').value);
-    const D3 = parseFloat(document.getElementById painless').value);
+    const D3 = parseFloat(document.getElementById('d3').value);
     const E3 = parseFloat(document.getElementById('e3').value);
     const angle2 = parseFloat(document.getElementById('angle2').value) * Math.PI / 180;
     const angle3 = parseFloat(document.getElementById('angle3').value) * Math.PI / 180;
