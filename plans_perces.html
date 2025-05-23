@@ -181,5 +181,24 @@
     </div>
 
     <script src="script.js"></script>
+    <script>
+    document.querySelectorAll('input[type="range"]').forEach(input => {
+        const valueDisplay = document.getElementById(`${input.id}-value`);
+        valueDisplay.textContent = input.value;
+        input.addEventListener('input', () => {
+            valueDisplay.textContent = input.value;
+        });
+    });
+        document.querySelectorAll('input[type="range"], input[type="color"]').forEach(input => {
+        input.addEventListener('input', drawPlans);
+    });
+    document.querySelectorAll('input[type="range"]').forEach(input => {
+        const valueDisplay = document.getElementById(`${input.id}-value`);
+        valueDisplay.textContent = input.value;
+        input.addEventListener('input', () => {
+            valueDisplay.textContent = input.value;
+        });
+    });
+</script>
 </body>
 </html>
