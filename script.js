@@ -21,22 +21,22 @@ function drawPlans() {
     const color3 = document.getElementById('color3').value;
 
     const tempCanvas1 = document.createElement('canvas');
-    tempCanvas1.width = 1000 * OVERFLOW_FACTOR;
-    tempCanvas1.height = 1000 * OVERFLOW_FACTOR;
+    tempCanvas1.width = 600 * OVERFLOW_FACTOR;
+    tempCanvas1.height = 600 * OVERFLOW_FACTOR;
     const tempCtx1 = tempCanvas1.getContext('2d');
 
     const tempCanvas2 = document.createElement('canvas');
-    tempCanvas2.width = 1000 * OVERFLOW_FACTOR;
-    tempCanvas2.height = 1000 * OVERFLOW_FACTOR;
+    tempCanvas2.width = 600 * OVERFLOW_FACTOR;
+    tempCanvas2.height = 600 * OVERFLOW_FACTOR;
     const tempCtx2 = tempCanvas2.getContext('2d');
 
     const tempCanvas3 = document.createElement('canvas');
-    tempCanvas3.width = 1000 * OVERFLOW_FACTOR;
-    tempCanvas3.height = 1000 * OVERFLOW_FACTOR;
+    tempCanvas3.width = 600 * OVERFLOW_FACTOR;
+    tempCanvas3.height = 600 * OVERFLOW_FACTOR;
     const tempCtx3 = tempCanvas3.getContext('2d');
 
     ctx.fillStyle = bgColor;
-    ctx.fillRect(0, 0, 1000, 1000);
+    ctx.fillRect(0, 0, 600, 600);
 
     tempCtx1.globalAlpha = alpha1;
     tempCtx1.fillStyle = color1;
@@ -58,9 +58,9 @@ function drawPlans() {
 
     const offsetX = (tempCanvas1.width - 1000) / 2;
     const offsetY = (tempCanvas1.height - 1000) / 2;
-    ctx.drawImage(tempCanvas1, offsetX, offsetY, 1000, 1000, 0, 0, 1000, 1000);
-    ctx.drawImage(tempCanvas2, offsetX, offsetY, 1000, 1000, 0, 0, 1000, 1000);
-    ctx.drawImage(tempCanvas3, offsetX, offsetY, 1000, 1000, 0, 0, 1000, 1000);
+    ctx.drawImage(tempCanvas1, offsetX, offsetY, 600, 600, 0, 0, 600, 600);
+    ctx.drawImage(tempCanvas2, offsetX, offsetY, 600, 600, 0, 0, 600, 600);
+    ctx.drawImage(tempCanvas3, offsetX, offsetY, 600, 600, 0, 0, 600, 600);
 }
 
 // Partie B : Fonction punchHoles()
@@ -157,5 +157,11 @@ function copyToClipboard() {
     });
 }
 
+function downloadCanvas() {
+    const link = document.createElement('a');
+    link.download = 'plans_perces.png';
+    link.href = canvas.toDataURL('image/png');
+    link.click();
+}
 // Dessine une première fois au chargement
 drawPlans();
