@@ -2,53 +2,184 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>Générateur de plans percés</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Générateur de Plans Percés</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <h1>Générateur de plans percés</h1>
-    <h3>Plages de tirage aléatoire</h3>
-    <label for="minD1">Min D1:</label><input type="number" id="minD1" value="5" min="1" max="199">
-    <label for="maxD1">Max D1:</label><input type="number" id="maxD1" value="200" min="6" max="200"><br>
-    <label for="minE1">Min E1:</label><input type="number" id="minE1" value="10" min="1" max="399">
-    <label for="maxE1">Max E1:</label><input type="number" id="maxE1" value="400" min="11" max="400"><br>
-    <label for="minD2">Min D2:</label><input type="number" id="minD2" value="5" min="1" max="199">
-    <label for="maxD2">Max D2:</label><input type="number" id="maxD2" value="200" min="6" max="200"><br>
-    <label for="minE2">Min E2:</label><input type="number" id="minE2" value="10" min="1" max="399">
-    <label for="maxE2">Max E2:</label><input type="number" id="maxE2" value="400" min="11" max="400"><br>
-    <label for="minD3">Min D3:</label><input type="number" id="minD3" value="5" min="1" max="199">
-    <label for="maxD3">Max D3:</label><input type="number" id="maxD3" value="200" min="6" max="200"><br>
-    <label for="minE3">Min E3:</label><input type="number" id="minE3" value="10" min="1" max="399">
-    <label for="maxE3">Max E3:</label><input type="number" id="maxE3" value="400" min="11" max="400"><br>
-    <label for="minAlpha">Min Transparence (0-1):</label><input type="number" id="minAlpha" value="0" min="0" max="1" step="0.1">
-    <label for="maxAlpha">Max Transparence (0-1):</label><input type="number" id="maxAlpha" value="1" min="0" max="1" step="0.1"><br>
+    <div class="container">
+        <!-- Panneau de contrôle -->
+        <div class="control-panel">
+            <h1>Générateur de Plans Percés</h1>
 
-    <h3>Plan 1 (arrière)</h3>
-    <label for="d1">Diamètre (D1):</label><input type="number" id="d1" value="20" min="5" max="200">
-    <label for="e1">Espacement (E1):</label><input type="number" id="e1" value="60" min="10" max="400">
-    <label for="color1">Couleur (HEX):</label><input type="text" id="color1" value="#555555" pattern="#[0-9A-Fa-f]{6}">
-    <label for="alpha1">Transparence (0-1):</label><input type="number" id="alpha1" value="1" min="0" max="1" step="0.1"><br>
+            <!-- Section Plan 1 -->
+            <div class="plan-section">
+                <h2>Plan 1 (Arrière)</h2>
+                <div class="control-group">
+                    <label for="d1">Diamètre (px):</label>
+                    <input type="range" id="d1" min="10" max="200" value="20">
+                    <span class="value-display" id="d1-value">20</span>
+                </div>
+                <div class="control-group">
+                    <label for="e1">Espacement (px):</label>
+                    <input type="range" id="e1" min="20" max="500" value="60">
+                    <span class="value-display" id="e1-value">60</span>
+                </div>
+                <div class="control-group">
+                    <label for="color1">Couleur:</label>
+                    <input type="color" id="color1" value="#555555">
+                </div>
+                <div class="control-group">
+                    <label for="alpha1">Transparence (0-1):</label>
+                    <input type="range" id="alpha1" min="0" max="1" step="0.1" value="1">
+                    <span class="value-display" id="alpha1-value">1.0</span>
+                </div>
+            </div>
 
-    <h3>Plan 2 (milieu)</h3>
-    <label for="d2">Diamètre (D2):</label><input type="number" id="d2" value="15" min="5" max="200">
-    <label for="e2">Espacement (E2):</label><input type="number" id="e2" value="50" min="10" max="400">
-    <label for="color2">Couleur (HEX):</label><input type="text" id="color2" value="#BBBBBB" pattern="#[0-9A-Fa-f]{6}">
-    <label for="angle2">Angle (degrés):</label><input type="number" id="angle2" value="0" min="0" max="360">
-    <label for="alpha2">Transparence (0-1):</label><input type="number" id="alpha2" value="1" min="0" max="1" step="0.1"><br>
+            <!-- Section Plan 2 -->
+            <div class="plan-section">
+                <h2>Plan 2 (Milieu)</h2>
+                <div class="control-group">
+                    <label for="d2">Diamètre (px):</label>
+                    <input type="range" id="d2" min="10" max="200" value="15">
+                    <span class="value-display" id="d2-value">15</span>
+                </div>
+                <div class="control-group">
+                    <label for="e2">Espacement (px):</label>
+                    <input type="range" id="e2" min="20" max="500" value="50">
+                    <span class="value-display" id="e2-value">50</span>
+                </div>
+                <div class="control-group">
+                    <label for="angle2">Angle (°):</label>
+                    <input type="range" id="angle2" min="0" max="360" value="0">
+                    <span class="value-display" id="angle2-value">0</span>
+                </div>
+                <div class="control-group">
+                    <label for="color2">Couleur:</label>
+                    <input type="color" id="color2" value="#BBBBBB">
+                </div>
+                <div class="control-group">
+                    <label for="alpha2">Transparence (0-1):</label>
+                    <input type="range" id="alpha2" min="0" max="1" step="0.1" value="1">
+                    <span class="value-display" id="alpha2-value">1.0</span>
+                </div>
+            </div>
 
-    <h3>Plan 3 (avant)</h3>
-    <label for="d3">Diamètre (D3):</label><input type="number" id="d3" value="10" min="5" max="200">
-    <label for="e3">Espacement (E3):</label><input type="number" id="e3" value="40" min="10" max="400">
-    <label for="color3">Couleur (HEX):</label><input type="text" id="color3" value="#888888" pattern="#[0-9A-Fa-f]{6}">
-    <label for="angle3">Angle (degrés):</label><input type="number" id="angle3" value="0" min="0" max="360">
-    <label for="alpha3">Transparence (0-1):</label><input type="number" id="alpha3" value="1" min="0" max="1" step="0.1"><br>
+            <!-- Section Plan 3 -->
+            <div class="plan-section">
+                <h2>Plan 3 (Avant)</h2>
+                <div class="control-group">
+                    <label for="d3">Diamètre (px):</label>
+                    <input type="range" id="d3" min="10" max="200" value="10">
+                    <span class="value-display" id="d3-value">10</span>
+                </div>
+                <div class="control-group">
+                    <label for="e3">Espacement (px):</label>
+                    <input type="range" id="e3" min="20" max="500" value="40">
+                    <span class="value-display" id="e3-value">40</span>
+                </div>
+                <div class="control-group">
+                    <label for="angle3">Angle (°):</label>
+                    <input type="range" id="angle3" min="0" max="360" value="0">
+                    <span class="value-display" id="angle3-value">0</span>
+                </div>
+                <div class="control-group">
+                    <label for="color3">Couleur:</label>
+                    <input type="color" id="color3" value="#888888">
+                </div>
+                <div class="control-group">
+                    <label for="alpha3">Transparence (0-1):</label>
+                    <input type="range" id="alpha3" min="0" max="1" step="0.1" value="1">
+                    <span class="value-display" id="alpha3-value">1.0</span>
+                </div>
+            </div>
 
-    <h3>Fond</h3>
-    <label for="bgColor">Couleur (HEX):</label><input type="text" id="bgColor" value="#FFFFFF" pattern="#[0-9A-Fa-f]{6}">
-    <button onclick="drawPlans()">Générer</button>
-    <button onclick="randomize()">Aléatoire</button>
-    <canvas id="myCanvas" width="1000" height="1000"></canvas>
-    <p id="paramString" onclick="copyToClipboard()">Cliquez pour copier les paramètres : <span id="paramValues"></span></p>
+            <!-- Section Fond -->
+            <div class="plan-section">
+                <h2>Fond</h2>
+                <div class="control-group">
+                    <label for="bgColor">Couleur de fond:</label>
+                    <input type="color" id="bgColor" value="#FFFFFF">
+                </div>
+            </div>
+
+            <!-- Paramètres pour Aléatoire -->
+            <div class="plan-section">
+                <h2>Paramètres Aléatoires</h2>
+                <div class="control-group">
+                    <label for="minD1">Diamètre Min (px):</label>
+                    <input type="number" id="minD1" value="10" min="10">
+                </div>
+                <div class="control-group">
+                    <label for="maxD1">Diamètre Max (px):</label>
+                    <input type="number" id="maxD1" value="200" max="200">
+                </div>
+                <div class="control-group">
+                    <label for="minE1">Espacement Min (px):</label>
+                    <input type="number" id="minE1" value="20" min="20">
+                </div>
+                <div class="control-group">
+                    <label for="maxE1">Espacement Max (px):</label>
+                    <input type="number" id="maxE1" value="500" max="500">
+                </div>
+                <div class="control-group">
+                    <label for="minD2">Diamètre Min (px):</label>
+                    <input type="number" id="minD2" value="10" min="10">
+                </div>
+                <div class="control-group">
+                    <label for="maxD2">Diamètre Max (px):</label>
+                    <input type="number" id="maxD2" value="200" max="200">
+                </div>
+                <div class="control-group">
+                    <label for="minE2">Espacement Min (px):</label>
+                    <input type="number" id="minE2" value="20" min="20">
+                </div>
+                <div class="control-group">
+                    <label for="maxE2">Espacement Max (px):</label>
+                    <input type="number" id="maxE2" value="500" max="500">
+                </div>
+                <div class="control-group">
+                    <label for="minD3">Diamètre Min (px):</label>
+                    <input type="number" id="minD3" value="10" min="10">
+                </div>
+                <div class="control-group">
+                    <label for="maxD3">Diamètre Max (px):</label>
+                    <input type="number" id="maxD3" value="200" max="200">
+                </div>
+                <div class="control-group">
+                    <label for="minE3">Espacement Min (px):</label>
+                    <input type="number" id="minE3" value="20" min="20">
+                </div>
+                <div class="control-group">
+                    <label for="maxE3">Espacement Max (px):</label>
+                    <input type="number" id="maxE3" value="500" max="500">
+                </div>
+                <div class="control-group">
+                    <label for="minAlpha">Transparence Min (0-1):</label>
+                    <input type="number" id="minAlpha" value="0" min="0" max="1" step="0.1">
+                </div>
+                <div class="control-group">
+                    <label for="maxAlpha">Transparence Max (0-1):</label>
+                    <input type="number" id="maxAlpha" value="1" min="0" max="1" step="0.1">
+                </div>
+            </div>
+        </div>
+
+        <!-- Zone de rendu -->
+        <div class="render-panel">
+            <canvas id="myCanvas" width="600" height="600"></canvas>
+            <div class="button-group">
+                <button onclick="drawPlans()">Générer</button>
+                <button onclick="randomize()">Aléatoire</button>
+                <button onclick="downloadCanvas()">Télécharger</button>
+            </div>
+            <div class="param-display">
+                <p>Fond: <span id="paramValues">Cliquez pour copier les paramètres</span></p>
+                <script>document.getElementById('paramValues').onclick = copyToClipboard;</script>
+            </div>
+        </div>
+    </div>
+
     <script src="script.js"></script>
 </body>
 </html>
