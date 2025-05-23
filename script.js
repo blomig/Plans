@@ -61,6 +61,9 @@ function drawPlans() {
     ctx.drawImage(tempCanvas1, offsetX, offsetY, 600, 600, 0, 0, 600, 600);
     ctx.drawImage(tempCanvas2, offsetX, offsetY, 600, 600, 0, 0, 600, 600);
     ctx.drawImage(tempCanvas3, offsetX, offsetY, 600, 600, 0, 0, 600, 600);
+
+    // Ajoute cet appel pour mettre à jour la chaîne de paramètres
+    updateParamString(D1, E1, color1, D2, E2, color2, angle2, D3, E3, color3, angle3, alpha1, alpha2, alpha3);
 }
 
 // Partie B : Fonction punchHoles()
