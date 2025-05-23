@@ -207,5 +207,55 @@
         });
     });
 </script>
+    <script>
+    document.querySelectorAll('.knob').forEach(knob => {
+        const knobHandle = knob.querySelector('.knob-handle');
+        const input = document.getElementById(knob.id.replace('-knob', ''));
+        const valueDisplay = document.getElementById(`${input.id}-value`);
+        const min = parseFloat(knob.dataset.min);
+        const max = parseFloat(knob.dataset.max);
+        let isDragging = false;
+
+        // Initialise l'affichage
+        valueDisplay.textContent = input.value;
+
+        knob.addEventListener('mousedown', (e) => {
+            isDragging = true;
+        });
+
+        document.addEventListener('mousemove', (e) => {
+            if (!isDragging) return;
+
+            // Calcule l'angle basé sur la position de la souris
+            const rect = knob.getBoundingClientRect();
+            const centerX = rect.left + rect.width / 2;
+            const centerY = rect.top + rect.height / 2;
+            const angle = Math.atan2(e.clientY - centerY, e.clientX - centerX) * (180 / Math.PI) + 90;
+            let normalizedAngle = angle < 0 ? angle + 360 : angle;
+
+            // Limite l'angle entre -135° et +135° (270° d'amplitude)
+            const minAngle = -135;
+            const maxAngle = 135;
+            normalizedAngle = Math.max(minAngle, Math.min(maxAngle, normalizedAngle - 135));
+
+            // Applique la rotation visuelle
+            knobHandle.style.transform = `rotate(${normalizedAngle}deg)`;
+
+            // Mappe l'angle à la plage de valeurs (min à max)
+            const angleRange = maxAngle - minAngle;
+            const valueRange = max - min;
+            const value = min + (normalizedAngle - minAngle) * (valueRange / angleRange);
+            input.value = Math.round(value);
+            valueDisplay.textContent = input.value;
+
+            // Déclenche le dessin en temps réel (si activé)
+            if (drawPlans) drawPlans();
+        });
+
+        document.addEventListener('mouseup', () => {
+            isDragging = false;
+        });
+    });
+</script>
 </body>
 </html>
