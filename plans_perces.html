@@ -50,10 +50,13 @@
                     <span class="value-display" id="e2-value">50</span>
                 </div>
                 <div class="control-group">
-                    <label for="angle2">Angle (°):</label>
-                    <input type="range" id="angle2" min="0" max="360" value="0">
-                    <span class="value-display" id="angle2-value">0</span>
-                </div>
+    <label for="angle2">Angle (°):</label>
+    <div class="knob" id="angle2-knob" data-min="0" data-max="360" data-value="0">
+        <div class="knob-handle"></div>
+    </div>
+    <input type="hidden" id="angle2" value="0">
+    <span class="value-display" id="angle2-value">0</span>
+</div>
                 <div class="control-group">
                     <label for="color2">Couleur:</label>
                     <input type="color" id="color2" value="#BBBBBB">
@@ -78,11 +81,15 @@
                     <input type="range" id="e3" min="20" max="500" value="40">
                     <span class="value-display" id="e3-value">40</span>
                 </div>
-                <div class="control-group">
-                    <label for="angle3">Angle (°):</label>
-                    <input type="range" id="angle3" min="0" max="360" value="0">
-                    <span class="value-display" id="angle3-value">0</span>
-                </div>
+                <!-- Section Plan 3 -->
+<div class="control-group">
+    <label for="angle3">Angle (°):</label>
+    <div class="knob" id="angle3-knob" data-min="0" data-max="360" data-value="0">
+        <div class="knob-handle"></div>
+    </div>
+    <input type="hidden" id="angle3" value="0">
+    <span class="value-display" id="angle3-value">0</span>
+</div>
                 <div class="control-group">
                     <label for="color3">Couleur:</label>
                     <input type="color" id="color3" value="#888888">
